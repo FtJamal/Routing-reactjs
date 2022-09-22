@@ -13,6 +13,10 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
+import { GlobalContext } from '../../context/Context';
+import { useContext } from "react";
+
+
 
 function Copyright(props) {
     return (
@@ -30,6 +34,10 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Login() {
+
+    let { state, dispatch } = useContext(GlobalContext);
+
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -37,7 +45,7 @@ export default function Login() {
             email: data.get('email'),
             password: data.get('password'),
         });
-        let baseUrl = "http://localhost:3000";
+        let baseUrl = "http://localhost:5001";
 
         axios.post(`${baseUrl}/login`, {
             email: data.get('email'),
@@ -45,7 +53,9 @@ export default function Login() {
         })
 
             .then(function (response) {
-                console.log("response: ", response.data.message);
+                console.log("response: ", response.data);
+
+                dispatch({ type:"USER_LOGIN" , payload: response.data.profile})
 
 
             })
